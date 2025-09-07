@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio Francisca Rodrigues - Agendamento</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fafafa;
+      color: #333;
+    }
+    header {
+      background: #d6336c;
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    nav {
+      background: #f8d7da;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #d6336c;
+      font-weight: bold;
+    }
+    section {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h2 {
+      color: #d6336c;
+    }
+    .servicos ul {
+      list-style: none;
+      padding: 0;
+    }
+    .servicos li {
+      background: #fff;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    form label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    form input, form select, form button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    form button {
+      background: #d6336c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    form button:hover {
+      background: #b52d5b;
+    }
+    footer {
+      text-align: center;
+      background: #d6336c;
+      color: white;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Studio Francisca Rodrigues</h1>
+    <p>Beleza e cuidado em cada detalhe</p>
+  </header>
+  
+  <nav>
+    <a href="#servicos">Serviços</a>
+    <a href="#agendamento">Agendamento</a>
+    <a href="#contato">Contato</a>
+  </nav>
+
+  <section id="servicos" class="servicos">
+    <h2>Serviços</h2>
+    <ul>
+      <li><strong>Unhas:</strong> R$ 40</li>
+      <li><strong>Cabelos:</strong> R$ 80</li>
+      <li><strong>Maquiagem:</strong> R$ 70</li>
+      <li><strong>Sobrancelhas:</strong> R$ 30</li>
+    </ul>
+  </section>
+
+  <section id="agendamento">
+    <h2>Agende seu horário</h2>
+    <form id="formAgendamento">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required>
+
+      <label for="telefone">Telefone:</label>
+      <input type="tel" id="telefone" name="telefone" required>
+
+      <label for="servico">Serviço:</label>
+      <select id="servico" name="servico" required>
+        <option value="">Selecione</option>
+        <option value="Unhas">Unhas</option>
+        <option value="Cabelos">Cabelos</option>
+        <option value="Maquiagem">Maquiagem</option>
+        <option value="Sobrancelhas">Sobrancelhas</option>
+      </select>
+
+      <label for="data">Data:</label>
+      <input type="date" id="data" name="data" required>
+
+      <label for="hora">Hora:</label>
+      <input type="time" id="hora" name="hora" required>
+
+      <button type="submit">Agendar</button>
+    </form>
+  </section>
+
+  <section id="contato">
+    <h2>Contato</h2>
+    <p>📍 Endereço: Rua Exemplo, 123 - Centro</p>
+    <p>📞 Telefone: (86) 98339-1451</p>
+    <p>📱 WhatsApp: <a href="https://wa.me/5586988391451" target="_blank">Clique aqui</a></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Studio Francisca Rodrigues - Todos os direitos reservados</p>
+  </footer>
+
+  <script>
+    document.getElementById("formAgendamento").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById("nome").value;
+      const telefone = document.getElementById("telefone").value;
+      const servico = document.getElementById("servico").value;
+      const data = document.getElementById("data").value;
+      const hora = document.getElementById("hora").value;
+
+      const mensagem = `Olá, meu nome é ${nome}. Gostaria de agendar o serviço de ${servico} no dia ${data} às ${hora}. Meu telefone é ${telefone}.`;
+      const url = `https://wa.me/5586988391451?text=${encodeURIComponent(mensagem)}`;
+
+      window.open(url, "_blank");
+    });
+  </script>
+</body>
+</html>
