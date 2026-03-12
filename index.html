@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 
 <meta charset="UTF-8">
@@ -12,7 +13,7 @@
 body{
 font-family:Arial;
 margin:0;
-background:#f3f3f3;
+background:#f2f2f2;
 }
 
 header{
@@ -56,6 +57,13 @@ padding:10px;
 margin-top:10px;
 }
 
+button{
+background:#e83e8c;
+color:white;
+border:none;
+border-radius:5px;
+}
+
 .horarios{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(80px,1fr));
@@ -92,6 +100,15 @@ border-radius:10px;
 .vanessa{border-left:6px solid orange;padding-left:10px;}
 .leila{border-left:6px solid #4dabf7;padding-left:10px;}
 
+.adminBtn{
+position:fixed;
+bottom:5px;
+right:10px;
+font-size:10px;
+color:#aaa;
+cursor:pointer;
+}
+
 .stats{
 display:none;
 gap:20px;
@@ -104,19 +121,11 @@ padding:15px;
 border-radius:10px;
 flex:1;
 text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
 .adminTools{
 display:none;
 margin-bottom:20px;
-}
-
-button{
-background:#e83e8c;
-color:white;
-border:none;
-border-radius:5px;
 }
 
 .cancelar{
@@ -127,15 +136,6 @@ margin-top:5px;
 .whats{
 background:green;
 margin-top:5px;
-}
-
-.adminBtn{
-position:fixed;
-bottom:5px;
-right:10px;
-font-size:10px;
-color:#aaa;
-cursor:pointer;
 }
 
 </style>
@@ -171,15 +171,15 @@ cursor:pointer;
 
 <form id="form">
 
-<input type="text" id="nome" placeholder="Nome" required>
+<input id="nome" placeholder="Nome" required>
 
-<input type="tel" id="telefone" placeholder="Telefone" required>
+<input id="telefone" placeholder="Telefone" required>
 
 <input id="servico" readonly placeholder="Serviço">
 
 <select id="profissional"></select>
 
-<input type="date" id="data" required>
+<input type="date" id="data">
 
 <div id="horarios" class="horarios"></div>
 
@@ -197,12 +197,12 @@ cursor:pointer;
 
 <div class="stat">
 <h3 id="clientesHoje">0</h3>
-Clientes hoje
+Clientes Hoje
 </div>
 
 <div class="stat">
 <h3 id="faturamentoHoje">R$0</h3>
-Faturamento hoje
+Faturamento Hoje
 </div>
 
 </div>
@@ -214,6 +214,8 @@ Faturamento hoje
 <button onclick="exportar()">📄 Exportar clientes</button>
 
 <button onclick="limpar()">🗑 Limpar agenda</button>
+
+<button onclick="ranking()">📈 Ranking profissionais</button>
 
 </div>
 
@@ -251,15 +253,18 @@ function servico(s){
 
 servico.value=s
 
-let select=profissional
-
-select.innerHTML=""
+profissional.innerHTML=""
 
 profissionais[s].forEach(p=>{
+
 let o=document.createElement("option")
+
 o.value=p
+
 o.textContent=p
-select.appendChild(o)
+
+profissional.appendChild(o)
+
 })
 
 carregarHorarios()
@@ -270,9 +275,6 @@ function carregarHorarios(){
 
 let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
-let data=dataInput.value
-let prof=profissional.value
-
 horariosBox.innerHTML=""
 
 horarios.forEach(h=>{
@@ -280,9 +282,10 @@ horarios.forEach(h=>{
 let div=document.createElement("div")
 
 div.className="hora"
+
 div.innerText=h
 
-let ocupado=agenda.some(a=>a.data==data && a.hora==h && a.profissional==prof)
+let ocupado=agenda.some(a=>a.data==data.value && a.hora==h && a.profissional==profissional.value)
 
 if(ocupado){
 
@@ -308,21 +311,22 @@ horariosBox.appendChild(div)
 
 }
 
-dataInput.onchange=carregarHorarios
+data.onchange=carregarHorarios
 profissional.onchange=carregarHorarios
 
 function login(){
 
 let senha=prompt("Senha admin")
 
-if(senha=="1234"){
+if(senha=="fran4252"){
 
 admin=true
 
 stats.style.display="flex"
+
 adminTools.style.display="block"
 
-alert("Modo administrador ativado")
+alert("Modo administrador")
 
 render()
 
@@ -378,6 +382,7 @@ ${a.data} ${a.hora}
 if(a.data==hoje){
 
 clientes++
+
 faturamento+=precos[a.servico]||0
 
 }
@@ -385,6 +390,7 @@ faturamento+=precos[a.servico]||0
 })
 
 clientesHoje.innerText=clientes
+
 faturamentoHoje.innerText="R$"+faturamento
 
 }
@@ -429,13 +435,15 @@ function exportar(){
 
 let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
-let texto="CLIENTES\n\n"
+let txt="CLIENTES\n\n"
 
 agenda.forEach(a=>{
-texto+=`${a.nome} - ${a.telefone} - ${a.servico} - ${a.data} ${a.hora}\n`
+
+txt+=`${a.nome} - ${a.telefone} - ${a.servico} - ${a.data} ${a.hora}\n`
+
 })
 
-let blob=new Blob([texto])
+let blob=new Blob([txt])
 
 let a=document.createElement("a")
 
@@ -447,9 +455,33 @@ a.click()
 
 }
 
+function ranking(){
+
+let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+
+let cont={}
+
+agenda.forEach(a=>{
+
+cont[a.profissional]=(cont[a.profissional]||0)+1
+
+})
+
+let msg="Ranking de atendimentos\n\n"
+
+for(let p in cont){
+
+msg+=`${p}: ${cont[p]} atendimentos\n`
+
+}
+
+alert(msg)
+
+}
+
 function limpar(){
 
-if(confirm("Apagar toda agenda?")){
+if(confirm("Apagar agenda?")){
 
 localStorage.removeItem("agenda")
 
@@ -465,7 +497,7 @@ e.preventDefault()
 
 let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
-let ocupado=agenda.some(a=>a.data==dataInput.value && a.hora==hora.value && a.profissional==profissional.value)
+let ocupado=agenda.some(a=>a.data==data.value && a.hora==hora.value && a.profissional==profissional.value)
 
 if(ocupado){
 
@@ -476,12 +508,19 @@ return
 }
 
 agenda.push({
+
 nome:nome.value,
+
 telefone:telefone.value,
+
 servico:servico.value,
+
 profissional:profissional.value,
-data:dataInput.value,
+
+data:data.value,
+
 hora:hora.value
+
 })
 
 localStorage.setItem("agenda",JSON.stringify(agenda))
@@ -489,7 +528,6 @@ localStorage.setItem("agenda",JSON.stringify(agenda))
 alert("Agendamento confirmado!")
 
 render()
-carregarHorarios()
 
 }
 
@@ -498,4 +536,5 @@ render()
 </script>
 
 </body>
+
 </html>
