@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,7 +11,7 @@
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 margin:0;
 background:#fafafa;
 color:#333;
@@ -38,10 +40,10 @@ object-fit:cover;
 }
 
 nav{
-background:#fff;
-padding:10px;
+background:white;
+padding:12px;
 text-align:center;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
 nav a{
@@ -58,8 +60,8 @@ padding:30px 20px;
 }
 
 h2{
-color:#d6336c;
 text-align:center;
+color:#d6336c;
 }
 
 .servicos{
@@ -75,6 +77,7 @@ padding:20px;
 border-radius:12px;
 box-shadow:0 4px 10px rgba(0,0,0,0.1);
 transition:0.3s;
+text-align:center;
 }
 
 .card:hover{
@@ -89,9 +92,9 @@ box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
 
 form label{
+display:block;
 font-weight:bold;
 margin-top:10px;
-display:block;
 }
 
 form input,select,button{
@@ -123,6 +126,12 @@ padding:15px;
 margin-top:40px;
 }
 
+iframe{
+width:100%;
+border-radius:10px;
+border:0;
+}
+
 .whatsapp{
 position:fixed;
 bottom:20px;
@@ -136,32 +145,32 @@ text-decoration:none;
 box-shadow:0 4px 10px rgba(0,0,0,0.3);
 }
 
-iframe{
-width:100%;
-border-radius:10px;
-}
-
 </style>
+
 </head>
 
 <body>
 
 <header>
+
 <h1>Studio Francisca Rodrigues</h1>
 <p>Beleza e cuidado em cada detalhe</p>
+
 </header>
 
 <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e" class="banner">
 
 <nav>
+
 <a href="#servicos">Serviços</a>
 <a href="#agendamento">Agendamento</a>
 <a href="#contato">Contato</a>
+
 </nav>
 
 <section id="servicos">
 
-<h2>Serviços</h2>
+<h2>Nossos Serviços</h2>
 
 <div class="servicos">
 
@@ -217,6 +226,7 @@ border-radius:10px;
 <input type="tel" id="telefone" required>
 
 <label>Serviço</label>
+
 <select id="servico" required>
 
 <option value="">Selecione</option>
@@ -265,7 +275,9 @@ src="https://maps.google.com/maps?q=Av.+Jorn.+Josipio+Lustosa+6318&t=&z=15&ie=UT
 </section>
 
 <footer>
+
 © 2025 Studio Francisca Rodrigues
+
 </footer>
 
 <a class="whatsapp"
@@ -279,18 +291,17 @@ target="_blank">
 const hoje = new Date().toISOString().split("T")[0];
 document.getElementById("data").setAttribute("min", hoje);
 
-document.getElementById("formAgendamento")
-.addEventListener("submit",function(e){
+document.getElementById("formAgendamento").addEventListener("submit", function(e){
 
 e.preventDefault();
 
-const nome=document.getElementById("nome").value;
-const telefone=document.getElementById("telefone").value;
-const servico=document.getElementById("servico").value;
-const data=document.getElementById("data").value;
-const hora=document.getElementById("hora").value;
+const nome = document.getElementById("nome").value;
+const telefone = document.getElementById("telefone").value;
+const servico = document.getElementById("servico").value;
+const data = document.getElementById("data").value;
+const hora = document.getElementById("hora").value;
 
-const mensagem=
+const mensagem =
 `*Novo Agendamento*
 
 Nome: ${nome}
@@ -299,7 +310,7 @@ Serviço: ${servico}
 Data: ${data}
 Hora: ${hora}`;
 
-const url=
+const url =
 `https://wa.me/5586988391451?text=${encodeURIComponent(mensagem)}`;
 
 window.open(url,"_blank");
