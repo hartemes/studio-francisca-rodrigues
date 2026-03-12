@@ -61,11 +61,6 @@ border-radius:10px;
 box-shadow:0 3px 10px rgba(0,0,0,0.1);
 cursor:pointer;
 text-align:center;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
 }
 
 form{
@@ -88,10 +83,6 @@ background:#d6336c;
 color:white;
 border:none;
 cursor:pointer;
-}
-
-button:hover{
-background:#b52d5b;
 }
 
 .horarios{
@@ -164,7 +155,7 @@ margin-top:40px;
 
 <section id="servicos">
 
-<h2>Escolha o serviço</h2>
+<h2>Serviços</h2>
 
 <div class="servicos">
 
@@ -174,7 +165,6 @@ margin-top:40px;
 <div class="card" onclick="selecionarServico('Selagem')">💎 Selagem</div>
 <div class="card" onclick="selecionarServico('Sobrancelha')">👁️ Sobrancelha</div>
 <div class="card" onclick="selecionarServico('Henna')">🖌️ Henna</div>
-<div class="card" onclick="selecionarServico('Maquiagem')">💄 Maquiagem</div>
 
 </div>
 
@@ -182,7 +172,7 @@ margin-top:40px;
 
 <section id="agendamento">
 
-<h2>Agendamento</h2>
+<h2>Agendar Horário</h2>
 
 <form id="form">
 
@@ -204,7 +194,7 @@ margin-top:40px;
 
 <input type="hidden" id="hora">
 
-<button type="submit">Confirmar Agendamento</button>
+<button type="submit">Confirmar</button>
 
 </form>
 
@@ -212,7 +202,7 @@ margin-top:40px;
 
 <section id="agenda">
 
-<h2>Agendamentos</h2>
+<h2>Agenda</h2>
 
 <div class="lista" id="lista"></div>
 
@@ -239,12 +229,11 @@ const horarios=[
 
 function carregarHorarios(){
 
-const container=document.getElementById("horarios")
-container.innerHTML=""
-
 const data=document.getElementById("data").value
-
 const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+const container=document.getElementById("horarios")
+
+container.innerHTML=""
 
 horarios.forEach(h=>{
 
@@ -276,11 +265,15 @@ container.appendChild(div)
 
 }
 
-document.getElementById("data").addEventListener("change",carregarHorarios)
+document.getElementById("data")
+.addEventListener("change",carregarHorarios)
 
 function selecionarServico(s){
+
 document.getElementById("servico").value=s
-document.getElementById("agendamento").scrollIntoView({behavior:"smooth"})
+document.getElementById("agendamento")
+.scrollIntoView({behavior:"smooth"})
+
 }
 
 function atualizarLista(){
@@ -295,22 +288,29 @@ adminLista.innerHTML=""
 
 agenda.forEach((a,i)=>{
 
+// VISÃO DO CLIENTE (SEM NOMES)
+
 lista.innerHTML+=`
 <p>
-<b>${a.nome}</b><br>
+<b>Cliente</b><br>
 ${a.servico}<br>
 ${a.data} - ${a.hora}
-</p><hr>
+</p>
+<hr>
 `
+
+// VISÃO DO ADMIN
 
 adminLista.innerHTML+=`
 <p>
 <b>${a.nome}</b><br>
+${a.telefone}<br>
 ${a.servico}<br>
 ${a.data} - ${a.hora}
 <br>
 <button class="cancelar" onclick="cancelar(${i})">Cancelar</button>
-</p><hr>
+</p>
+<hr>
 `
 
 })
@@ -335,15 +335,20 @@ function abrirAdmin(){
 const senha=prompt("Digite a senha")
 
 if(senha==="1234"){
+
 document.getElementById("admin").style.display="block"
 window.location="#admin"
+
 }else{
+
 alert("Senha incorreta")
-}
 
 }
 
-document.getElementById("form").addEventListener("submit",function(e){
+}
+
+document.getElementById("form")
+.addEventListener("submit",function(e){
 
 e.preventDefault()
 
@@ -359,10 +364,10 @@ agenda.push({nome,telefone,servico,data,hora})
 
 localStorage.setItem("agenda",JSON.stringify(agenda))
 
+alert("Agendamento confirmado!")
+
 atualizarLista()
 carregarHorarios()
-
-alert("Agendamento confirmado!")
 
 })
 
