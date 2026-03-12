@@ -23,12 +23,12 @@ padding:40px;
 }
 
 section{
-max-width:900px;
+max-width:1000px;
 margin:auto;
-padding:30px;
+padding:25px;
 }
 
-.servicos{
+.card-grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 gap:15px;
@@ -77,7 +77,7 @@ color:white;
 }
 
 .hora.ocupado{
-background:#999;
+background:#888;
 color:white;
 cursor:not-allowed;
 }
@@ -89,13 +89,29 @@ border-radius:10px;
 margin-top:20px;
 }
 
-.admin{
-display:none;
-}
+.francisca{border-left:6px solid #ff4d6d;}
+.vanessa{border-left:6px solid #ff9f1c;}
+.leila{border-left:6px solid #4dabf7;}
 
 .cancelar{
 background:red;
 color:white;
+margin-top:5px;
+}
+
+.stats{
+display:flex;
+gap:20px;
+margin-top:20px;
+}
+
+.stat{
+background:white;
+padding:15px;
+border-radius:10px;
+flex:1;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
 </style>
@@ -105,15 +121,17 @@ color:white;
 <body>
 
 <header>
+
 <h1>Studio Francisca Rodrigues</h1>
-<p>Agendamento Online</p>
+<p>Sistema de Agendamento</p>
+
 </header>
 
 <section>
 
 <h2>Serviços</h2>
 
-<div class="servicos">
+<div class="card-grid">
 
 <div class="card" onclick="selecionarServico('Unhas')">💅 Unhas</div>
 <div class="card" onclick="selecionarServico('Cabelo')">💇 Cabelo</div>
@@ -129,22 +147,15 @@ color:white;
 
 <form id="form">
 
-<label>Nome</label>
-<input type="text" id="nome" required>
+<input type="text" id="nome" placeholder="Nome" required>
 
-<label>Telefone</label>
-<input type="tel" id="telefone" required>
+<input type="tel" id="telefone" placeholder="Telefone" required>
 
-<label>Serviço</label>
-<input type="text" id="servico" readonly required>
+<input type="text" id="servico" placeholder="Serviço" readonly required>
 
-<label>Profissional</label>
 <select id="profissional"></select>
 
-<label>Data</label>
 <input type="date" id="data" required>
-
-<label>Horário</label>
 
 <div class="horarios" id="horarios"></div>
 
@@ -158,17 +169,27 @@ color:white;
 
 <section>
 
-<h2>Agenda</h2>
+<div class="stats">
 
-<div class="lista" id="lista"></div>
+<div class="stat">
+<h3 id="clientesHoje">0</h3>
+Clientes Hoje
+</div>
+
+<div class="stat">
+<h3 id="faturamentoHoje">R$0</h3>
+Faturamento Estimado
+</div>
+
+</div>
 
 </section>
 
-<section id="admin" class="admin">
+<section>
 
-<h2>Painel Administrador</h2>
+<h2>Agenda</h2>
 
-<div class="lista" id="adminLista"></div>
+<div id="lista" class="lista"></div>
 
 </section>
 
@@ -180,13 +201,15 @@ const horarios=[
 ]
 
 const profissionais={
-
 Unhas:["Francisca","Vanessa"],
-
 Cabelo:["Leila","Francisca"],
-
 Hidratação:["Leila"]
+}
 
+const precos={
+Unhas:40,
+Cabelo:50,
+Hidratação:30
 }
 
 function selecionarServico(servico){
@@ -200,7 +223,6 @@ select.innerHTML=""
 profissionais[servico].forEach(p=>{
 
 let option=document.createElement("option")
-
 option.value=p
 option.textContent=p
 
@@ -208,7 +230,12 @@ select.appendChild(option)
 
 })
 
+carregarHorarios()
+
 }
+
+document.getElementById("data").addEventListener("change",carregarHorarios)
+document.getElementById("profissional").addEventListener("change",carregarHorarios)
 
 function carregarHorarios(){
 
@@ -226,10 +253,13 @@ horarios.forEach(h=>{
 let div=document.createElement("div")
 
 div.className="hora"
-
 div.innerText=h
 
-const ocupado=agenda.find(a=>a.data===data && a.hora===h && a.profissional===profissional)
+const ocupado=agenda.some(a =>
+a.data===data &&
+a.hora===h &&
+a.profissional===profissional
+)
 
 if(ocupado){
 
@@ -256,79 +286,48 @@ container.appendChild(div)
 
 }
 
-document.getElementById("data").addEventListener("change",carregarHorarios)
-
-document.getElementById("profissional").addEventListener("change",carregarHorarios)
-
 function atualizarLista(){
 
 const lista=document.getElementById("lista")
 
-const adminLista=document.getElementById("adminLista")
-
 const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
 lista.innerHTML=""
-adminLista.innerHTML=""
+
+let clientesHoje=0
+let faturamento=0
+
+const hoje=new Date().toISOString().slice(0,10)
 
 agenda.forEach((a,i)=>{
 
+let classe=a.profissional.toLowerCase()
+
 lista.innerHTML+=`
 
-<p>
+<div class="${classe}">
 <b>Cliente</b><br>
 ${a.servico}<br>
 ${a.profissional}<br>
 ${a.data} ${a.hora}
-</p>
+</div>
 <hr>
 
 `
 
-adminLista.innerHTML+=`
+if(a.data===hoje){
 
-<p>
-<b>${a.nome}</b><br>
-${a.telefone}<br>
-${a.servico}<br>
-${a.profissional}<br>
-${a.data} ${a.hora}
-<br>
-<button class="cancelar" onclick="cancelar(${i})">Cancelar</button>
-</p>
-<hr>
+clientesHoje++
 
-`
+faturamento+=precos[a.servico]||0
+
+}
 
 })
 
-}
+document.getElementById("clientesHoje").innerText=clientesHoje
 
-function cancelar(i){
-
-const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
-
-agenda.splice(i,1)
-
-localStorage.setItem("agenda",JSON.stringify(agenda))
-
-atualizarLista()
-
-}
-
-function abrirAdmin(){
-
-const senha=prompt("Senha")
-
-if(senha==="1234"){
-
-document.getElementById("admin").style.display="block"
-
-}else{
-
-alert("Senha incorreta")
-
-}
+document.getElementById("faturamentoHoje").innerText="R$"+faturamento
 
 }
 
@@ -345,30 +344,38 @@ const hora=document.getElementById("hora").value
 
 const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
+const ocupado=agenda.some(a =>
+a.data===data &&
+a.hora===hora &&
+a.profissional===profissional
+)
+
+if(ocupado){
+
+alert(profissional+" não está disponível nesse horário.")
+
+return
+
+}
+
 agenda.push({nome,telefone,servico,profissional,data,hora})
 
 localStorage.setItem("agenda",JSON.stringify(agenda))
 
-// mensagem WhatsApp
+const msg=`Novo agendamento
 
-const msg=`
-Novo Agendamento
+${nome}
+${telefone}
+${servico}
+${profissional}
+${data} ${hora}`
 
-Nome: ${nome}
-Telefone: ${telefone}
-Serviço: ${servico}
-Profissional: ${profissional}
-Data: ${data}
-Hora: ${hora}
-`
-
-const url=`https://wa.me/5586988391451?text=${encodeURIComponent(msg)}`
-
-window.open(url)
+window.open("https://wa.me/5586988391451?text="+encodeURIComponent(msg))
 
 alert("Agendamento confirmado!")
 
 atualizarLista()
+carregarHorarios()
 
 })
 
