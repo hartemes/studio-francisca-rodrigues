@@ -153,9 +153,9 @@ margin-top:5px;
 
 <div class="card-grid">
 
-<div class="card" onclick="servico('Unhas')">💅 Unhas</div>
-<div class="card" onclick="servico('Cabelo')">💇 Cabelo</div>
-<div class="card" onclick="servico('Hidratação')">✨ Hidratação</div>
+<div class="card" onclick="selecionarServico('Unhas')">💅 Unhas</div>
+<div class="card" onclick="selecionarServico('Cabelo')">💇 Cabelo</div>
+<div class="card" onclick="selecionarServico('Hidratação')">✨ Hidratação</div>
 
 </div>
 
@@ -177,7 +177,7 @@ margin-top:5px;
 
 <input type="date" id="data">
 
-<div id="horarios" class="horarios"></div>
+<div id="horariosContainer" class="horarios"></div>
 
 <input type="hidden" id="hora">
 
@@ -221,7 +221,7 @@ Faturamento Hoje
 
 <h2>Agenda</h2>
 
-<div id="agenda" class="lista"></div>
+<div id="agendaLista" class="lista"></div>
 
 </section>
 
@@ -231,7 +231,10 @@ Faturamento Hoje
 
 let admin=false
 
-const horarios=["08:00","09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"]
+const horariosDisponiveis=[
+"08:00","09:00","10:00","11:00",
+"13:00","14:00","15:00","16:00","17:00"
+]
 
 const profissionais={
 Unhas:["Francisca","Vanessa"],
@@ -245,20 +248,17 @@ Cabelo:50,
 Hidratação:30
 }
 
-function servico(s){
+function selecionarServico(serv){
 
-servico.value=s
+servico.value=serv
 
 profissional.innerHTML=""
 
-profissionais[s].forEach(p=>{
+profissionais[serv].forEach(p=>{
 
 let o=document.createElement("option")
-
 o.value=p
-
 o.textContent=p
-
 profissional.appendChild(o)
 
 })
@@ -269,19 +269,24 @@ carregarHorarios()
 
 function carregarHorarios(){
 
-let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
-horarios.innerHTML=""
+const container=document.getElementById("horariosContainer")
 
-horarios.forEach(h=>{
+container.innerHTML=""
+
+horariosDisponiveis.forEach(h=>{
 
 let div=document.createElement("div")
 
 div.className="hora"
-
 div.innerText=h
 
-let ocupado=agenda.some(a=>a.data==data.value && a.hora==h && a.profissional==profissional.value)
+let ocupado=agenda.some(a=>
+a.data==data.value &&
+a.hora==h &&
+a.profissional==profissional.value
+)
 
 if(ocupado){
 
@@ -301,7 +306,7 @@ hora.value=h
 
 }
 
-horarios.appendChild(div)
+container.appendChild(div)
 
 })
 
@@ -314,12 +319,12 @@ function login(){
 
 let senha=prompt("Senha admin")
 
-if(senha=="fran4252"){
+if(senha==="fran4252"){
 
 admin=true
 
-stats.style.display="flex"
-adminTools.style.display="block"
+document.getElementById("stats").style.display="flex"
+document.getElementById("adminTools").style.display="block"
 
 alert("Modo administrador")
 
@@ -331,22 +336,24 @@ render()
 
 function render(){
 
-let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
-agenda.sort((a,b)=>a.data.localeCompare(b.data)||a.hora.localeCompare(b.hora))
+const lista=document.getElementById("agendaLista")
 
-agenda.innerHTML=""
+lista.innerHTML=""
 
 let hoje=new Date().toISOString().slice(0,10)
 
 let clientes=0
 let faturamento=0
 
+agenda.sort((a,b)=>a.data.localeCompare(b.data)||a.hora.localeCompare(b.hora))
+
 agenda.forEach((a,i)=>{
 
 if(admin){
 
-agenda.innerHTML+=`
+lista.innerHTML+=`
 <div>
 <b>${a.nome}</b><br>
 ${a.telefone}<br>
@@ -360,7 +367,7 @@ ${a.data} ${a.hora}
 
 }else{
 
-agenda.innerHTML+=`
+lista.innerHTML+=`
 <div>
 <b>Cliente</b><br>
 ${a.servico}<br>
@@ -370,7 +377,7 @@ ${a.data} ${a.hora}
 
 }
 
-if(a.data==hoje){
+if(a.data===hoje){
 
 clientes++
 faturamento+=precos[a.servico]||0
@@ -486,7 +493,11 @@ e.preventDefault()
 
 let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
-let ocupado=agenda.some(a=>a.data==data.value && a.hora==hora.value && a.profissional==profissional.value)
+let ocupado=agenda.some(a=>
+a.data==data.value &&
+a.hora==hora.value &&
+a.profissional==profissional.value
+)
 
 if(ocupado){
 
@@ -512,6 +523,7 @@ localStorage.setItem("agenda",JSON.stringify(agenda))
 alert("Agendamento confirmado!")
 
 render()
+carregarHorarios()
 
 }
 
