@@ -96,10 +96,6 @@ padding:20px;
 border-radius:10px;
 }
 
-.francisca{border-left:6px solid #ff4d6d;padding-left:10px;}
-.vanessa{border-left:6px solid orange;padding-left:10px;}
-.leila{border-left:6px solid #4dabf7;padding-left:10px;}
-
 .adminBtn{
 position:fixed;
 bottom:5px;
@@ -213,9 +209,9 @@ Faturamento Hoje
 
 <button onclick="exportar()">📄 Exportar clientes</button>
 
-<button onclick="limpar()">🗑 Limpar agenda</button>
+<button onclick="ranking()">📊 Ranking profissionais</button>
 
-<button onclick="ranking()">📈 Ranking profissionais</button>
+<button onclick="limpar()">🗑 Limpar agenda</button>
 
 </div>
 
@@ -275,7 +271,7 @@ function carregarHorarios(){
 
 let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
-horariosBox.innerHTML=""
+horarios.innerHTML=""
 
 horarios.forEach(h=>{
 
@@ -305,7 +301,7 @@ hora.value=h
 
 }
 
-horariosBox.appendChild(div)
+horarios.appendChild(div)
 
 })
 
@@ -323,7 +319,6 @@ if(senha=="fran4252"){
 admin=true
 
 stats.style.display="flex"
-
 adminTools.style.display="block"
 
 alert("Modo administrador")
@@ -340,7 +335,7 @@ let agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
 agenda.sort((a,b)=>a.data.localeCompare(b.data)||a.hora.localeCompare(b.hora))
 
-agendaBox.innerHTML=""
+agenda.innerHTML=""
 
 let hoje=new Date().toISOString().slice(0,10)
 
@@ -349,13 +344,10 @@ let faturamento=0
 
 agenda.forEach((a,i)=>{
 
-let classe=a.profissional.toLowerCase()
-
 if(admin){
 
-agendaBox.innerHTML+=`
-
-<div class="${classe}">
+agenda.innerHTML+=`
+<div>
 <b>${a.nome}</b><br>
 ${a.telefone}<br>
 ${a.servico}<br>
@@ -368,9 +360,8 @@ ${a.data} ${a.hora}
 
 }else{
 
-agendaBox.innerHTML+=`
-
-<div class="${classe}">
+agenda.innerHTML+=`
+<div>
 <b>Cliente</b><br>
 ${a.servico}<br>
 ${a.profissional}<br>
@@ -382,7 +373,6 @@ ${a.data} ${a.hora}
 if(a.data==hoje){
 
 clientes++
-
 faturamento+=precos[a.servico]||0
 
 }
@@ -390,7 +380,6 @@ faturamento+=precos[a.servico]||0
 })
 
 clientesHoje.innerText=clientes
-
 faturamentoHoje.innerText="R$"+faturamento
 
 }
@@ -510,15 +499,10 @@ return
 agenda.push({
 
 nome:nome.value,
-
 telefone:telefone.value,
-
 servico:servico.value,
-
 profissional:profissional.value,
-
 data:data.value,
-
 hora:hora.value
 
 })
@@ -536,5 +520,4 @@ render()
 </script>
 
 </body>
-
 </html>
