@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 
 <meta charset="UTF-8">
@@ -15,25 +14,13 @@ font-family:Arial;
 margin:0;
 background:#fafafa;
 color:#333;
-scroll-behavior:smooth;
 }
 
 header{
 background:linear-gradient(45deg,#d6336c,#ff7aa2);
 color:white;
 text-align:center;
-padding:50px 20px;
-}
-
-header h1{
-margin:0;
-font-size:34px;
-}
-
-.banner{
-width:100%;
-height:260px;
-object-fit:cover;
+padding:40px;
 }
 
 nav{
@@ -53,58 +40,45 @@ font-weight:bold;
 section{
 max-width:900px;
 margin:auto;
-padding:35px 20px;
+padding:30px 20px;
 }
 
 h2{
 text-align:center;
 color:#d6336c;
-margin-bottom:25px;
 }
 
 .servicos{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:18px;
+gap:15px;
 }
 
 .card{
 background:white;
-padding:25px;
-border-radius:12px;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
-text-align:center;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
 cursor:pointer;
+text-align:center;
 transition:0.3s;
 }
 
 .card:hover{
-transform:translateY(-6px);
-box-shadow:0 8px 18px rgba(0,0,0,0.15);
-}
-
-.card h3{
-margin:10px 0;
-color:#d6336c;
+transform:translateY(-5px);
 }
 
 form{
 background:white;
-padding:25px;
+padding:20px;
 border-radius:10px;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
-form label{
-font-weight:bold;
-display:block;
-margin-top:12px;
-}
-
-form input,select,button{
+form input,button{
 width:100%;
 padding:10px;
-margin-top:6px;
+margin-top:8px;
 border-radius:6px;
 border:1px solid #ccc;
 }
@@ -113,13 +87,53 @@ button{
 background:#d6336c;
 color:white;
 border:none;
-font-size:16px;
 cursor:pointer;
-margin-top:15px;
 }
 
 button:hover{
 background:#b52d5b;
+}
+
+.horarios{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(80px,1fr));
+gap:10px;
+margin-top:15px;
+}
+
+.hora{
+background:#eee;
+padding:10px;
+border-radius:6px;
+text-align:center;
+cursor:pointer;
+}
+
+.hora.selecionado{
+background:#d6336c;
+color:white;
+}
+
+.hora.ocupado{
+background:#999;
+color:white;
+cursor:not-allowed;
+}
+
+.lista{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.admin{
+display:none;
+}
+
+.cancelar{
+background:red;
+margin-top:5px;
 }
 
 footer{
@@ -130,26 +144,6 @@ padding:15px;
 margin-top:40px;
 }
 
-iframe{
-width:100%;
-border-radius:10px;
-border:0;
-margin-top:10px;
-}
-
-.whatsapp{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#25D366;
-color:white;
-font-size:24px;
-padding:15px;
-border-radius:50%;
-text-decoration:none;
-box-shadow:0 5px 12px rgba(0,0,0,0.3);
-}
-
 </style>
 
 </head>
@@ -157,62 +151,30 @@ box-shadow:0 5px 12px rgba(0,0,0,0.3);
 <body>
 
 <header>
-
 <h1>Studio Francisca Rodrigues</h1>
 <p>Beleza e cuidado em cada detalhe</p>
-
 </header>
 
-<img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e" class="banner">
-
 <nav>
-
 <a href="#servicos">Serviços</a>
-<a href="#agendamento">Agendamento</a>
-<a href="#contato">Contato</a>
-
+<a href="#agendamento">Agendar</a>
+<a href="#agenda">Agenda</a>
+<a href="#" onclick="abrirAdmin()">Admin</a>
 </nav>
 
 <section id="servicos">
 
-<h2>Escolha seu Serviço</h2>
+<h2>Escolha o serviço</h2>
 
 <div class="servicos">
 
-<div class="card" onclick="selecionarServico('Unhas')">
-<h3>💅 Unhas</h3>
-<p>A partir de R$ 40</p>
-</div>
-
-<div class="card" onclick="selecionarServico('Escova')">
-<h3>💇 Escova</h3>
-<p>A partir de R$ 25</p>
-</div>
-
-<div class="card" onclick="selecionarServico('Hidratação + Escova')">
-<h3>✨ Hidratação</h3>
-<p>A partir de R$ 30</p>
-</div>
-
-<div class="card" onclick="selecionarServico('Selagem')">
-<h3>💎 Selagem</h3>
-<p>A partir de R$ 80</p>
-</div>
-
-<div class="card" onclick="selecionarServico('Sobrancelha Cera')">
-<h3>👁️ Sobrancelha</h3>
-<p>R$ 10</p>
-</div>
-
-<div class="card" onclick="selecionarServico('Sobrancelha Henna')">
-<h3>🖌️ Henna</h3>
-<p>R$ 20</p>
-</div>
-
-<div class="card" onclick="selecionarServico('Maquiagem')">
-<h3>💄 Maquiagem</h3>
-<p>A partir de R$ 60</p>
-</div>
+<div class="card" onclick="selecionarServico('Unhas')">💅 Unhas</div>
+<div class="card" onclick="selecionarServico('Escova')">💇 Escova</div>
+<div class="card" onclick="selecionarServico('Hidratação')">✨ Hidratação</div>
+<div class="card" onclick="selecionarServico('Selagem')">💎 Selagem</div>
+<div class="card" onclick="selecionarServico('Sobrancelha')">👁️ Sobrancelha</div>
+<div class="card" onclick="selecionarServico('Henna')">🖌️ Henna</div>
+<div class="card" onclick="selecionarServico('Maquiagem')">💄 Maquiagem</div>
 
 </div>
 
@@ -220,9 +182,9 @@ box-shadow:0 5px 12px rgba(0,0,0,0.3);
 
 <section id="agendamento">
 
-<h2>Agende seu horário</h2>
+<h2>Agendamento</h2>
 
-<form id="formAgendamento">
+<form id="form">
 
 <label>Nome</label>
 <input type="text" id="nome" required>
@@ -231,107 +193,180 @@ box-shadow:0 5px 12px rgba(0,0,0,0.3);
 <input type="tel" id="telefone" required>
 
 <label>Serviço</label>
-
-<select id="servico" required>
-
-<option value="">Selecione</option>
-<option>Unhas</option>
-<option>Escova</option>
-<option>Hidratação + Escova</option>
-<option>Selagem</option>
-<option>Sobrancelha Cera</option>
-<option>Sobrancelha Henna</option>
-<option>Maquiagem</option>
-
-</select>
+<input type="text" id="servico" readonly required>
 
 <label>Data</label>
 <input type="date" id="data" required>
 
-<label>Hora</label>
-<input type="time" id="hora" min="08:00" max="18:00" required>
+<label>Horário</label>
 
-<button type="submit">Agendar</button>
+<div class="horarios" id="horarios"></div>
+
+<input type="hidden" id="hora">
+
+<button type="submit">Confirmar Agendamento</button>
 
 </form>
 
 </section>
 
-<section id="contato">
+<section id="agenda">
 
-<h2>Contato</h2>
+<h2>Agendamentos</h2>
 
-<p>📍 Av. Jorn. Josipio Lustosa 6318, Mocambinho II</p>
+<div class="lista" id="lista"></div>
 
-<p>📞 (86) 98839-1451</p>
+</section>
 
-<p>
-📱 <a href="https://wa.me/5586988391451" target="_blank">
-Falar no WhatsApp
-</a>
-</p>
+<section id="admin" class="admin">
 
-<h3>Localização</h3>
+<h2>Painel Administrador</h2>
 
-<iframe height="250"
-src="https://maps.google.com/maps?q=Av.+Jorn.+Josipio+Lustosa+6318&t=&z=15&ie=UTF8&iwloc=&output=embed">
-</iframe>
+<div class="lista" id="adminLista"></div>
 
 </section>
 
 <footer>
-
-© 2025 Studio Francisca Rodrigues
-
+Studio Francisca Rodrigues
 </footer>
-
-<a class="whatsapp"
-href="https://wa.me/5586988391451"
-target="_blank">
-💬
-</a>
 
 <script>
 
-const hoje = new Date().toISOString().split("T")[0];
-document.getElementById("data").setAttribute("min", hoje);
+const horarios=[
+"08:00","09:00","10:00","11:00",
+"13:00","14:00","15:00","16:00","17:00","18:00"
+]
 
-function selecionarServico(servico){
+function carregarHorarios(){
 
-document.getElementById("servico").value = servico;
+const container=document.getElementById("horarios")
+container.innerHTML=""
 
-document.getElementById("agendamento").scrollIntoView({
-behavior:"smooth"
-});
+const data=document.getElementById("data").value
+
+const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+
+horarios.forEach(h=>{
+
+let div=document.createElement("div")
+div.className="hora"
+div.innerText=h
+
+const ocupado=agenda.find(a=>a.data===data && a.hora===h)
+
+if(ocupado){
+div.classList.add("ocupado")
+}else{
+
+div.onclick=()=>{
+
+document.querySelectorAll(".hora")
+.forEach(el=>el.classList.remove("selecionado"))
+
+div.classList.add("selecionado")
+document.getElementById("hora").value=h
 
 }
 
-document.getElementById("formAgendamento")
-.addEventListener("submit", function(e){
+}
 
-e.preventDefault();
+container.appendChild(div)
 
-const nome = document.getElementById("nome").value;
-const telefone = document.getElementById("telefone").value;
-const servico = document.getElementById("servico").value;
-const data = document.getElementById("data").value;
-const hora = document.getElementById("hora").value;
+})
 
-const mensagem =
-`*Novo Agendamento*
+}
 
-Nome: ${nome}
-Telefone: ${telefone}
-Serviço: ${servico}
-Data: ${data}
-Hora: ${hora}`;
+document.getElementById("data").addEventListener("change",carregarHorarios)
 
-const url =
-`https://wa.me/5586988391451?text=${encodeURIComponent(mensagem)}`;
+function selecionarServico(s){
+document.getElementById("servico").value=s
+document.getElementById("agendamento").scrollIntoView({behavior:"smooth"})
+}
 
-window.open(url,"_blank");
+function atualizarLista(){
 
-});
+const lista=document.getElementById("lista")
+const adminLista=document.getElementById("adminLista")
+
+const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+
+lista.innerHTML=""
+adminLista.innerHTML=""
+
+agenda.forEach((a,i)=>{
+
+lista.innerHTML+=`
+<p>
+<b>${a.nome}</b><br>
+${a.servico}<br>
+${a.data} - ${a.hora}
+</p><hr>
+`
+
+adminLista.innerHTML+=`
+<p>
+<b>${a.nome}</b><br>
+${a.servico}<br>
+${a.data} - ${a.hora}
+<br>
+<button class="cancelar" onclick="cancelar(${i})">Cancelar</button>
+</p><hr>
+`
+
+})
+
+}
+
+function cancelar(i){
+
+const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+
+agenda.splice(i,1)
+
+localStorage.setItem("agenda",JSON.stringify(agenda))
+
+atualizarLista()
+carregarHorarios()
+
+}
+
+function abrirAdmin(){
+
+const senha=prompt("Digite a senha")
+
+if(senha==="1234"){
+document.getElementById("admin").style.display="block"
+window.location="#admin"
+}else{
+alert("Senha incorreta")
+}
+
+}
+
+document.getElementById("form").addEventListener("submit",function(e){
+
+e.preventDefault()
+
+const nome=document.getElementById("nome").value
+const telefone=document.getElementById("telefone").value
+const servico=document.getElementById("servico").value
+const data=document.getElementById("data").value
+const hora=document.getElementById("hora").value
+
+const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+
+agenda.push({nome,telefone,servico,data,hora})
+
+localStorage.setItem("agenda",JSON.stringify(agenda))
+
+atualizarLista()
+carregarHorarios()
+
+alert("Agendamento confirmado!")
+
+})
+
+atualizarLista()
 
 </script>
 
