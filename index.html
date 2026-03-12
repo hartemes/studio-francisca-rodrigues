@@ -13,7 +13,6 @@ body{
 font-family:Arial;
 margin:0;
 background:#fafafa;
-color:#333;
 }
 
 header{
@@ -23,29 +22,10 @@ text-align:center;
 padding:40px;
 }
 
-nav{
-background:white;
-padding:12px;
-text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,0.1);
-}
-
-nav a{
-margin:0 15px;
-text-decoration:none;
-color:#d6336c;
-font-weight:bold;
-}
-
 section{
 max-width:900px;
 margin:auto;
-padding:30px 20px;
-}
-
-h2{
-text-align:center;
-color:#d6336c;
+padding:30px;
 }
 
 .servicos{
@@ -58,9 +38,9 @@ gap:15px;
 background:white;
 padding:20px;
 border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
-cursor:pointer;
 text-align:center;
+cursor:pointer;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
 form{
@@ -70,19 +50,10 @@ border-radius:10px;
 box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
-form input,button{
+form input,select,button{
 width:100%;
 padding:10px;
-margin-top:8px;
-border-radius:6px;
-border:1px solid #ccc;
-}
-
-button{
-background:#d6336c;
-color:white;
-border:none;
-cursor:pointer;
+margin-top:10px;
 }
 
 .horarios{
@@ -95,8 +66,8 @@ margin-top:15px;
 .hora{
 background:#eee;
 padding:10px;
-border-radius:6px;
 text-align:center;
+border-radius:6px;
 cursor:pointer;
 }
 
@@ -115,7 +86,7 @@ cursor:not-allowed;
 background:white;
 padding:15px;
 border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
+margin-top:20px;
 }
 
 .admin{
@@ -124,15 +95,7 @@ display:none;
 
 .cancelar{
 background:red;
-margin-top:5px;
-}
-
-footer{
-background:#d6336c;
 color:white;
-text-align:center;
-padding:15px;
-margin-top:40px;
 }
 
 </style>
@@ -143,36 +106,26 @@ margin-top:40px;
 
 <header>
 <h1>Studio Francisca Rodrigues</h1>
-<p>Beleza e cuidado em cada detalhe</p>
+<p>Agendamento Online</p>
 </header>
 
-<nav>
-<a href="#servicos">Serviços</a>
-<a href="#agendamento">Agendar</a>
-<a href="#agenda">Agenda</a>
-<a href="#" onclick="abrirAdmin()">Admin</a>
-</nav>
-
-<section id="servicos">
+<section>
 
 <h2>Serviços</h2>
 
 <div class="servicos">
 
 <div class="card" onclick="selecionarServico('Unhas')">💅 Unhas</div>
-<div class="card" onclick="selecionarServico('Escova')">💇 Escova</div>
+<div class="card" onclick="selecionarServico('Cabelo')">💇 Cabelo</div>
 <div class="card" onclick="selecionarServico('Hidratação')">✨ Hidratação</div>
-<div class="card" onclick="selecionarServico('Selagem')">💎 Selagem</div>
-<div class="card" onclick="selecionarServico('Sobrancelha')">👁️ Sobrancelha</div>
-<div class="card" onclick="selecionarServico('Henna')">🖌️ Henna</div>
 
 </div>
 
 </section>
 
-<section id="agendamento">
+<section>
 
-<h2>Agendar Horário</h2>
+<h2>Agendar</h2>
 
 <form id="form">
 
@@ -185,6 +138,9 @@ margin-top:40px;
 <label>Serviço</label>
 <input type="text" id="servico" readonly required>
 
+<label>Profissional</label>
+<select id="profissional"></select>
+
 <label>Data</label>
 <input type="date" id="data" required>
 
@@ -194,13 +150,13 @@ margin-top:40px;
 
 <input type="hidden" id="hora">
 
-<button type="submit">Confirmar</button>
+<button>Confirmar Agendamento</button>
 
 </form>
 
 </section>
 
-<section id="agenda">
+<section>
 
 <h2>Agenda</h2>
 
@@ -216,21 +172,51 @@ margin-top:40px;
 
 </section>
 
-<footer>
-Studio Francisca Rodrigues
-</footer>
-
 <script>
 
 const horarios=[
 "08:00","09:00","10:00","11:00",
-"13:00","14:00","15:00","16:00","17:00","18:00"
+"13:00","14:00","15:00","16:00","17:00"
 ]
+
+const profissionais={
+
+Unhas:["Francisca","Vanessa"],
+
+Cabelo:["Leila","Francisca"],
+
+Hidratação:["Leila"]
+
+}
+
+function selecionarServico(servico){
+
+document.getElementById("servico").value=servico
+
+const select=document.getElementById("profissional")
+
+select.innerHTML=""
+
+profissionais[servico].forEach(p=>{
+
+let option=document.createElement("option")
+
+option.value=p
+option.textContent=p
+
+select.appendChild(option)
+
+})
+
+}
 
 function carregarHorarios(){
 
 const data=document.getElementById("data").value
+const profissional=document.getElementById("profissional").value
+
 const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
+
 const container=document.getElementById("horarios")
 
 container.innerHTML=""
@@ -238,13 +224,17 @@ container.innerHTML=""
 horarios.forEach(h=>{
 
 let div=document.createElement("div")
+
 div.className="hora"
+
 div.innerText=h
 
-const ocupado=agenda.find(a=>a.data===data && a.hora===h)
+const ocupado=agenda.find(a=>a.data===data && a.hora===h && a.profissional===profissional)
 
 if(ocupado){
+
 div.classList.add("ocupado")
+
 }else{
 
 div.onclick=()=>{
@@ -253,6 +243,7 @@ document.querySelectorAll(".hora")
 .forEach(el=>el.classList.remove("selecionado"))
 
 div.classList.add("selecionado")
+
 document.getElementById("hora").value=h
 
 }
@@ -265,20 +256,14 @@ container.appendChild(div)
 
 }
 
-document.getElementById("data")
-.addEventListener("change",carregarHorarios)
+document.getElementById("data").addEventListener("change",carregarHorarios)
 
-function selecionarServico(s){
-
-document.getElementById("servico").value=s
-document.getElementById("agendamento")
-.scrollIntoView({behavior:"smooth"})
-
-}
+document.getElementById("profissional").addEventListener("change",carregarHorarios)
 
 function atualizarLista(){
 
 const lista=document.getElementById("lista")
+
 const adminLista=document.getElementById("adminLista")
 
 const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
@@ -288,29 +273,31 @@ adminLista.innerHTML=""
 
 agenda.forEach((a,i)=>{
 
-// VISÃO DO CLIENTE (SEM NOMES)
-
 lista.innerHTML+=`
+
 <p>
 <b>Cliente</b><br>
 ${a.servico}<br>
-${a.data} - ${a.hora}
+${a.profissional}<br>
+${a.data} ${a.hora}
 </p>
 <hr>
+
 `
 
-// VISÃO DO ADMIN
-
 adminLista.innerHTML+=`
+
 <p>
 <b>${a.nome}</b><br>
 ${a.telefone}<br>
 ${a.servico}<br>
-${a.data} - ${a.hora}
+${a.profissional}<br>
+${a.data} ${a.hora}
 <br>
 <button class="cancelar" onclick="cancelar(${i})">Cancelar</button>
 </p>
 <hr>
+
 `
 
 })
@@ -326,18 +313,16 @@ agenda.splice(i,1)
 localStorage.setItem("agenda",JSON.stringify(agenda))
 
 atualizarLista()
-carregarHorarios()
 
 }
 
 function abrirAdmin(){
 
-const senha=prompt("Digite a senha")
+const senha=prompt("Senha")
 
 if(senha==="1234"){
 
 document.getElementById("admin").style.display="block"
-window.location="#admin"
 
 }else{
 
@@ -347,27 +332,43 @@ alert("Senha incorreta")
 
 }
 
-document.getElementById("form")
-.addEventListener("submit",function(e){
+document.getElementById("form").addEventListener("submit",function(e){
 
 e.preventDefault()
 
 const nome=document.getElementById("nome").value
 const telefone=document.getElementById("telefone").value
 const servico=document.getElementById("servico").value
+const profissional=document.getElementById("profissional").value
 const data=document.getElementById("data").value
 const hora=document.getElementById("hora").value
 
 const agenda=JSON.parse(localStorage.getItem("agenda"))||[]
 
-agenda.push({nome,telefone,servico,data,hora})
+agenda.push({nome,telefone,servico,profissional,data,hora})
 
 localStorage.setItem("agenda",JSON.stringify(agenda))
+
+// mensagem WhatsApp
+
+const msg=`
+Novo Agendamento
+
+Nome: ${nome}
+Telefone: ${telefone}
+Serviço: ${servico}
+Profissional: ${profissional}
+Data: ${data}
+Hora: ${hora}
+`
+
+const url=`https://wa.me/5586988391451?text=${encodeURIComponent(msg)}`
+
+window.open(url)
 
 alert("Agendamento confirmado!")
 
 atualizarLista()
-carregarHorarios()
 
 })
 
